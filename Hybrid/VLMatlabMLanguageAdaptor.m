@@ -109,6 +109,7 @@
     [buffer appendString:@"\n"];
     
     [buffer appendString:@"% Formulate balance equations - \n"];
+    [buffer appendString:@"\n"];
     
     // get the list of species -
     NSArray *species_array = [sbmlTree nodesForXPath:@".//species" error:nil];
@@ -124,6 +125,13 @@
         {
             [buffer appendFormat:@"%%\t %lu - %@\n",species_counter,species_symbol];
             [buffer appendFormat:@"state_vector_dot(%lu,1) = 0.0;\n",species_counter];
+        }
+        
+        // next, lets generate the dynamic equations -
+        if ([species_type isEqualToString:@"dynamic"] == YES)
+        {
+            [buffer appendFormat:@"%%\t %lu - %@\n",species_counter,species_symbol];
+            [buffer appendFormat:@"state_vector_dot(%lu,1) = code_here;\n",species_counter];
         }
         
         // update the counter -
