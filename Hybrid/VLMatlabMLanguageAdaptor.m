@@ -10,6 +10,20 @@
 
 @implementation VLMatlabMLanguageAdaptor
 
+-(NSString *)generateSystemBalancesWithOptions:(NSDictionary *)options
+{
+    // get the options from the dictionary -
+    NSXMLDocument *model_tree = [options objectForKey:kXMLModelTree];
+    NSXMLDocument *transformation_tree = [options objectForKey:kXMLTransformationTree];
+    
+    // build the buffer -
+    NSMutableString *buffer = [NSMutableString string];
+    NSString *balances_buffer = [self buildSystemBalancesBufferFromBlueprintTree:transformation_tree andSBMLTree:model_tree];
+    [buffer appendString:balances_buffer];
+    
+    // return -
+    return [NSString stringWithString:buffer];
+}
 
 
 -(NSString *)generateKineticsBufferWithOptions:(NSDictionary *)options
@@ -50,6 +64,87 @@
 }
 
 #pragma mark - private logic methods
+-(NSString *)buildSystemBalancesBufferFromBlueprintTree:(NSXMLDocument *)blueprintTree
+                                            andSBMLTree:(NSXMLDocument *)sbmlTree
+{
+    
+    
+    
+    // Initialize the buffer -
+    NSMutableString *buffer = [NSMutableString string];
+    [buffer appendString:@"function [state_vector_dot] = SystemBalanceEquations(t,x,DF)\n"];
+    [buffer appendString:@"% ------------------------------------------------------------------------------------- %\n"];
+    [buffer appendString:@"% Copyright (c) 2013 Varnerlab,\n"];
+    [buffer appendString:@"% School of Chemical and Biomolecular Engineering,\n"];
+    [buffer appendString:@"% Cornell University, Ithaca NY 14853 USA.\n"];
+    [buffer appendString:@"%\n"];
+    [buffer appendString:@"% Permission is hereby granted, free of charge, to any person obtaining a copy\n"];
+    [buffer appendString:@"% of this software and associated documentation files (the \"Software\"), to deal\n"];
+    [buffer appendString:@"% in the Software without restriction, including without limitation the rights\n"];
+    [buffer appendString:@"% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"];
+    [buffer appendString:@"% copies of the Software, and to permit persons to whom the Software is\n"];
+    [buffer appendString:@"% furnished to do so, subject to the following conditions:\n"];
+    [buffer appendString:@"% The above copyright notice and this permission notice shall be included in\n"];
+    [buffer appendString:@"% all copies or substantial portions of the Software.\n"];
+    [buffer appendString:@"%\n"];
+    [buffer appendString:@"% THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"];
+    [buffer appendString:@"% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"];
+    [buffer appendString:@"% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"];
+    [buffer appendString:@"% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"];
+    [buffer appendString:@"% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"];
+    [buffer appendString:@"% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n"];
+    [buffer appendString:@"% THE SOFTWARE.\n"];
+    [buffer appendString:@"%\n"];
+    [buffer appendString:@"% SystemBalanceEquations.m \n"];
+    [buffer appendString:@"% SystemBalanceEquations takes the time, state_vector and the data struct and calculates \n"];
+    [buffer appendString:@"% the state_vector_dot for a given model.\n"];
+    [buffer appendString:@"% ------------------------------------------------------------------------------------- %\n"];
+    [buffer appendFormat:@"\n"];
+    [buffer appendString:@"% Define the state vector - \n"];
+    [buffer appendString:@"NUMBER_OF_STATES = DF.NUMBER_OF_STATES;\n"];
+    [buffer appendString:@"state_vector_dot = zeros(NUMBER_OF_STATES,1);\n"];
+    [buffer appendString:@"\n"];
+    [buffer appendString:@"% Calculate the kinetics vector - \n"];
+    [buffer appendString:@"rate_vector = Kinetics(x,DF);\n"];
+    [buffer appendString:@"\n"];
+    
+    [buffer appendString:@"% Formulate balance equations - \n"];
+    
+    // get the list of species -
+    NSArray *species_array = [sbmlTree nodesForXPath:@".//species" error:nil];
+    NSUInteger species_counter = 1;
+    for (NSXMLElement *species_node in species_array)
+    {
+        // Get the species symbol, and type -
+        NSString *species_symbol = [[species_node attributeForName:@"symbol"] stringValue];
+        NSString *species_type = [[species_node attributeForName:@"type"] stringValue];
+        
+        // ok, if we have a constant node, the generate a state_vector_dot = 0;
+        if ([species_type isEqualToString:@"constant"] == YES)
+        {
+            [buffer appendFormat:@"%%\t %lu - %@\n",species_counter,species_symbol];
+            [buffer appendFormat:@"state_vector_dot(%lu,1) = 0.0;\n",species_counter];
+        }
+        
+        // update the counter -
+        species_counter = species_counter + 1;
+    }
+    
+    
+    
+    
+    
+    
+    
+    [buffer appendString:@"% Formulate dynamic balances - \n"];
+    
+    [buffer appendString:@"return;\n"];
+
+    
+    // return -
+    return buffer;
+}
+
 -(NSString *)buildKineticsBufferFromBlueprintTree:(NSXMLDocument *)blueprintTree
                                       andSBMLTree:(NSXMLDocument *)sbmlTree
 {

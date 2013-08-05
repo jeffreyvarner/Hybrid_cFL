@@ -28,6 +28,7 @@
 		AD89479C17B01DD500B92FCE /* VLMatlabMLanguageAdaptor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD89479B17B01DD500B92FCE /* VLMatlabMLanguageAdaptor.m */; };
 		AD89479F17B0221300B92FCE /* VLCFLMLToDataFileVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD89479E17B0221300B92FCE /* VLCFLMLToDataFileVendor.m */; };
 		AD8947A217B0286100B92FCE /* VLCFLMLToKineticsVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947A117B0286100B92FCE /* VLCFLMLToKineticsVendor.m */; };
+		AD8947A517B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947A417B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +80,8 @@
 		AD89479E17B0221300B92FCE /* VLCFLMLToDataFileVendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCFLMLToDataFileVendor.m; sourceTree = "<group>"; };
 		AD8947A017B0286100B92FCE /* VLCFLMLToKineticsVendor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VLCFLMLToKineticsVendor.h; sourceTree = "<group>"; };
 		AD8947A117B0286100B92FCE /* VLCFLMLToKineticsVendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCFLMLToKineticsVendor.m; sourceTree = "<group>"; };
+		AD8947A317B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VLCFLMLToSystemBalanceEquationsVendor.h; sourceTree = "<group>"; };
+		AD8947A417B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCFLMLToSystemBalanceEquationsVendor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -144,6 +147,7 @@
 		AD89474B17B000D500B92FCE /* Hybrid */ = {
 			isa = PBXGroup;
 			children = (
+				AD8947A617B0303C00B92FCE /* graph */,
 				AD89479217B014A900B92FCE /* services */,
 				AD89478417B006EA00B92FCE /* utilities */,
 				AD89477D17B0010F00B92FCE /* languages */,
@@ -229,6 +233,8 @@
 				AD89479E17B0221300B92FCE /* VLCFLMLToDataFileVendor.m */,
 				AD8947A017B0286100B92FCE /* VLCFLMLToKineticsVendor.h */,
 				AD8947A117B0286100B92FCE /* VLCFLMLToKineticsVendor.m */,
+				AD8947A317B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.h */,
+				AD8947A417B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.m */,
 			);
 			name = services;
 			sourceTree = "<group>";
@@ -240,6 +246,13 @@
 				AD89479B17B01DD500B92FCE /* VLMatlabMLanguageAdaptor.m */,
 			);
 			name = matlab_m;
+			sourceTree = "<group>";
+		};
+		AD8947A617B0303C00B92FCE /* graph */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = graph;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -353,6 +366,7 @@
 				AD89479F17B0221300B92FCE /* VLCFLMLToDataFileVendor.m in Sources */,
 				AD89475217B000D500B92FCE /* main.m in Sources */,
 				AD89478217B006DD00B92FCE /* VLCodeGenerationFoundationServer.m in Sources */,
+				AD8947A517B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
