@@ -9,5 +9,25 @@
 #import <Cocoa/Cocoa.h>
 
 @interface VLDocument : NSDocument
+{
+    @private
+    NSButton *_myGenerateCodeButton;
+    NSButton *_myCancelButton;
+    NSButton *_myOpenModelFileButton;
+    NSButton *_myOverwriteModelFilesCheckBox;
+    NSComboBox *_myModelOutputTypeComboBox;
+    NSTextField *_myConsoleTextField;
+    NSTextField *_myModelSpecificationPathTextField;
+    NSProgressIndicator *_myCodeGenerationProgressIndicator;
+    
+    NSWindowController *_myWindowController;
+    NSURL *_myBlueprintFileURL;
+}
+
+// actions -
+-(IBAction)codeGenerationBeginGenerationButtonWasTapped:(NSButton *)button;
+-(IBAction)codeGenerationCancelGenerationButtonWasTapped:(NSButton *)button;
+-(IBAction)codeGenerationLoadTransformationBlueprintButtonWasTapped:(NSButton *)button;
+
 
 @end
