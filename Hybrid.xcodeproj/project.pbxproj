@@ -30,6 +30,8 @@
 		AD8947A217B0286100B92FCE /* VLCFLMLToKineticsVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947A117B0286100B92FCE /* VLCFLMLToKineticsVendor.m */; };
 		AD8947A517B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947A417B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.m */; };
 		AD8947A917B14DF100B92FCE /* VLCFLMLToSignalDriverVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947A817B14DF100B92FCE /* VLCFLMLToSignalDriverVendor.m */; };
+		AD8947AC17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947AB17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.m */; };
+		AD8947B017B1915000B92FCE /* VLGraphVizLanguageAdaptor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947AF17B1915000B92FCE /* VLGraphVizLanguageAdaptor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +87,10 @@
 		AD8947A417B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCFLMLToSystemBalanceEquationsVendor.m; sourceTree = "<group>"; };
 		AD8947A717B14DF100B92FCE /* VLCFLMLToSignalDriverVendor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VLCFLMLToSignalDriverVendor.h; sourceTree = "<group>"; };
 		AD8947A817B14DF100B92FCE /* VLCFLMLToSignalDriverVendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCFLMLToSignalDriverVendor.m; sourceTree = "<group>"; };
+		AD8947AA17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VLCFLMLToGraphVizDotVendor.h; sourceTree = "<group>"; };
+		AD8947AB17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCFLMLToGraphVizDotVendor.m; sourceTree = "<group>"; };
+		AD8947AE17B1915000B92FCE /* VLGraphVizLanguageAdaptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VLGraphVizLanguageAdaptor.h; sourceTree = "<group>"; };
+		AD8947AF17B1915000B92FCE /* VLGraphVizLanguageAdaptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLGraphVizLanguageAdaptor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +215,7 @@
 		AD89477D17B0010F00B92FCE /* languages */ = {
 			isa = PBXGroup;
 			children = (
+				AD8947AD17B1914000B92FCE /* graphviz */,
 				AD89479917B01DA800B92FCE /* matlab_m */,
 				AD89479617B014D700B92FCE /* VLAbstractLanguageAdaptor.h */,
 				AD89479717B014D700B92FCE /* VLAbstractLanguageAdaptor.m */,
@@ -240,6 +247,8 @@
 				AD8947A117B0286100B92FCE /* VLCFLMLToKineticsVendor.m */,
 				AD8947A317B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.h */,
 				AD8947A417B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.m */,
+				AD8947AA17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.h */,
+				AD8947AB17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.m */,
 			);
 			name = services;
 			sourceTree = "<group>";
@@ -258,6 +267,15 @@
 			children = (
 			);
 			name = graph;
+			sourceTree = "<group>";
+		};
+		AD8947AD17B1914000B92FCE /* graphviz */ = {
+			isa = PBXGroup;
+			children = (
+				AD8947AE17B1915000B92FCE /* VLGraphVizLanguageAdaptor.h */,
+				AD8947AF17B1915000B92FCE /* VLGraphVizLanguageAdaptor.m */,
+			);
+			name = graphviz;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -365,7 +383,9 @@
 				AD89478A17B006FD00B92FCE /* VLCoreUtilitiesLib.m in Sources */,
 				AD89475917B000D500B92FCE /* VLDocument.m in Sources */,
 				AD89479817B014D700B92FCE /* VLAbstractLanguageAdaptor.m in Sources */,
+				AD8947B017B1915000B92FCE /* VLGraphVizLanguageAdaptor.m in Sources */,
 				AD89478917B006FD00B92FCE /* VLBlocksAndConstanStrings.m in Sources */,
+				AD8947AC17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.m in Sources */,
 				AD8947A217B0286100B92FCE /* VLCFLMLToKineticsVendor.m in Sources */,
 				AD89479C17B01DD500B92FCE /* VLMatlabMLanguageAdaptor.m in Sources */,
 				AD89479517B014BB00B92FCE /* VLTransformationServiceVendor.m in Sources */,
