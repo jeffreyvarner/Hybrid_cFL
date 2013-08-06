@@ -30,6 +30,7 @@
     
     // Setup blocks -
     // Input handler block -
+    __weak VLCFLMLToSystemBalanceEquationsVendor *weak_self = self;
     void (^VLOperationBlock)(void) = ^{
         
         // Create the buffer -
@@ -65,6 +66,10 @@
         
         // dump -
         [VLCoreUtilitiesLib writeBuffer:output toURL:fileURL];
+        
+        // print message to console -
+        NSString *message = [NSString stringWithFormat:@"Completed transformation: %@",transformationName];
+        [weak_self postMessageTransformationMessage:message];
     };
     
     

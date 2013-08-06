@@ -69,7 +69,9 @@
                         NSString *message = [notification object];
                         
                         // update the label -
-                        [[self myConsoleTextField] setStringValue:message];
+                        NSString *current_text = [[self myConsoleTextField] stringValue];
+                        NSString *new_text = [NSString stringWithFormat:@"%@\n%@",current_text,message];
+                        [[self myConsoleTextField] setStringValue:new_text];
                     }];
     
     // VLTransformationJobCompletedNotification -
@@ -81,8 +83,13 @@
                         // shutdown the progress bar animation -
                         [[self myCodeGenerationProgressIndicator] stopAnimation:nil];
                         
+                        // what is my end time?
+                        CFTimeInterval _myExecutionDuration = CFAbsoluteTimeGetCurrent() - _myExecutionStartTime;
+                        
                         // Set the completed text -
-                        [[self myConsoleTextField] setStringValue:@"Status: Transformation completed."];
+                        NSString *current_text = [[self myConsoleTextField] stringValue];
+                        NSString *new_text = [NSString stringWithFormat:@"%@\n%@ in %f seconds",current_text,@"Status: Transformation completed ",_myExecutionDuration];
+                        [[self myConsoleTextField] setStringValue:new_text];
                     }];
 
 }
@@ -95,8 +102,14 @@
     // process. If not, then open the open panel -
     if ([self myBlueprintFileURL]!=nil)
     {
+        // grab my start time -
+        _myExecutionStartTime = CFAbsoluteTimeGetCurrent();
+        
         // start the progress bar animation -
         [[self myCodeGenerationProgressIndicator] startAnimation:nil];
+        
+        // clear out the console -
+        [[self myConsoleTextField] setStringValue:@""];
         
         // Ok, so when I get here I have the blueprint file URL.
         // We need to start the code generation process for this blueprint file.
@@ -119,8 +132,18 @@
                 NSString *transformationName = [node stringValue];
                 
                 // update the progress text label -
-                NSString *progressText = [NSString stringWithFormat:@"Status: Loaded %@ block",transformationName];
-                [[self myConsoleTextField] setStringValue:progressText];
+                NSString *current_text = [[self myConsoleTextField] stringValue];
+                if ([current_text length]>0)
+                {
+                    NSString *progressText = [NSString stringWithFormat:@"%@\nStatus: Processing %@ block",current_text,transformationName];
+                    [[self myConsoleTextField] setStringValue:progressText];
+                }
+                else
+                {
+                    NSString *progressText = [NSString stringWithFormat:@"Status: Processing %@ block",transformationName];
+                    [[self myConsoleTextField] setStringValue:progressText];
+                }
+                
                 
                 // Get the input and output classname -
                 NSString *inputClassNameXPath = [NSString stringWithFormat:@"//Transformation[@name='%@']/@classname",transformationName];

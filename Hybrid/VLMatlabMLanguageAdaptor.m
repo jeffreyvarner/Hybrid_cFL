@@ -167,8 +167,10 @@
     [buffer appendString:@"NUMBER_OF_STATES = DF.NUMBER_OF_STATES;\n"];
     [buffer appendString:@"state_vector_dot = zeros(NUMBER_OF_STATES,1);\n"];
     [buffer appendString:@"\n"];
+    [buffer appendString:@"% Correct negative state vector (this should *not* happen) - \n"];
     [buffer appendString:@"IDXN = find(x<0);\n"];
     [buffer appendString:@"x(IDXN) = 0;\n"];
+    [buffer appendString:@"\n"];
     [buffer appendString:@"% Calculate the kinetics vector - \n"];
     [buffer appendString:@"rate_vector = Kinetics(x,DF);\n"];
     [buffer appendString:@"\n"];

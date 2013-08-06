@@ -22,6 +22,7 @@
     
     NSWindowController *_myWindowController;
     NSURL *_myBlueprintFileURL;
+    CFTimeInterval _myExecutionStartTime;
 }
 
 // actions -
