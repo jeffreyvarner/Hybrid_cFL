@@ -32,6 +32,7 @@
 		AD8947A917B14DF100B92FCE /* VLCFLMLToSignalDriverVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947A817B14DF100B92FCE /* VLCFLMLToSignalDriverVendor.m */; };
 		AD8947AC17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947AB17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.m */; };
 		AD8947B017B1915000B92FCE /* VLGraphVizLanguageAdaptor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947AF17B1915000B92FCE /* VLGraphVizLanguageAdaptor.m */; };
+		AD8947B317B1969C00B92FCE /* VLCFLMLToExternalForcingFunctionVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947B217B1969C00B92FCE /* VLCFLMLToExternalForcingFunctionVendor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,6 +92,8 @@
 		AD8947AB17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCFLMLToGraphVizDotVendor.m; sourceTree = "<group>"; };
 		AD8947AE17B1915000B92FCE /* VLGraphVizLanguageAdaptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VLGraphVizLanguageAdaptor.h; sourceTree = "<group>"; };
 		AD8947AF17B1915000B92FCE /* VLGraphVizLanguageAdaptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLGraphVizLanguageAdaptor.m; sourceTree = "<group>"; };
+		AD8947B117B1969C00B92FCE /* VLCFLMLToExternalForcingFunctionVendor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VLCFLMLToExternalForcingFunctionVendor.h; sourceTree = "<group>"; };
+		AD8947B217B1969C00B92FCE /* VLCFLMLToExternalForcingFunctionVendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCFLMLToExternalForcingFunctionVendor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -247,6 +250,8 @@
 				AD8947A117B0286100B92FCE /* VLCFLMLToKineticsVendor.m */,
 				AD8947A317B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.h */,
 				AD8947A417B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.m */,
+				AD8947B117B1969C00B92FCE /* VLCFLMLToExternalForcingFunctionVendor.h */,
+				AD8947B217B1969C00B92FCE /* VLCFLMLToExternalForcingFunctionVendor.m */,
 				AD8947AA17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.h */,
 				AD8947AB17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.m */,
 			);
@@ -383,6 +388,7 @@
 				AD89478A17B006FD00B92FCE /* VLCoreUtilitiesLib.m in Sources */,
 				AD89475917B000D500B92FCE /* VLDocument.m in Sources */,
 				AD89479817B014D700B92FCE /* VLAbstractLanguageAdaptor.m in Sources */,
+				AD8947B317B1969C00B92FCE /* VLCFLMLToExternalForcingFunctionVendor.m in Sources */,
 				AD8947B017B1915000B92FCE /* VLGraphVizLanguageAdaptor.m in Sources */,
 				AD89478917B006FD00B92FCE /* VLBlocksAndConstanStrings.m in Sources */,
 				AD8947AC17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.m in Sources */,
