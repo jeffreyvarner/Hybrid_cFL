@@ -63,6 +63,69 @@
     return [NSString stringWithString:buffer];
 }
 
+-(NSString *)generateSignalDriverBufferWithOptions:(NSDictionary *)options
+{
+    // Buffer to build the array -
+    NSMutableString *buffer = [NSMutableString string];
+    
+    // get the options from the dictionary -
+    __unused NSXMLDocument *model_tree = [options objectForKey:kXMLModelTree];
+    
+    // ok, so let's calculate system arrays -
+    [buffer appendString:@"function [TIME_VECTOR,SIMULATION_ARRAY] = Driver(TSTART,TSTOP,Ts,DFIN)\n"];
+    [buffer appendString:@"% ------------------------------------------------------------------------------------- %\n"];
+    [buffer appendString:@"% Copyright (c) 2013 Varnerlab,\n"];
+    [buffer appendString:@"% School of Chemical and Biomolecular Engineering,\n"];
+    [buffer appendString:@"% Cornell University, Ithaca NY 14853 USA.\n"];
+    [buffer appendString:@"%\n"];
+    [buffer appendString:@"% Permission is hereby granted, free of charge, to any person obtaining a copy\n"];
+    [buffer appendString:@"% of this software and associated documentation files (the \"Software\"), to deal\n"];
+    [buffer appendString:@"% in the Software without restriction, including without limitation the rights\n"];
+    [buffer appendString:@"% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"];
+    [buffer appendString:@"% copies of the Software, and to permit persons to whom the Software is\n"];
+    [buffer appendString:@"% furnished to do so, subject to the following conditions:\n"];
+    [buffer appendString:@"% The above copyright notice and this permission notice shall be included in\n"];
+    [buffer appendString:@"% all copies or substantial portions of the Software.\n"];
+    [buffer appendString:@"%\n"];
+    [buffer appendString:@"% THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"];
+    [buffer appendString:@"% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"];
+    [buffer appendString:@"% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"];
+    [buffer appendString:@"% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"];
+    [buffer appendString:@"% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"];
+    [buffer appendString:@"% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n"];
+    [buffer appendString:@"% THE SOFTWARE.\n"];
+    [buffer appendString:@"%\n"];
+    [buffer appendString:@"% Driver.m \n"];
+    [buffer appendString:@"% Main simulation function for evaluating a cFL model generated using the\n"];
+    [buffer appendString:@"% cFLHybdid system.\n"];
+    [buffer appendString:@"% ------------------------------------------------------------------------------------- %\n"];
+    [buffer appendString:@"\n"];
+    [buffer appendString:@"% Setup the simulation time scale - \n"];
+    [buffer appendString:@"TIME_VECTOR = TSTART:Ts:TSTOP;\n"];
+    [buffer appendString:@"NUMBER_OF_STEPS = length(TIME_VECTOR);\n"];
+    [buffer appendString:@"\n"];
+    [buffer appendString:@"% Load the DataFile - \n"];
+    [buffer appendString:@"if (isempty(DFIN))\n"];
+    [buffer appendString:@"\tDF = DataFile(TSTART,TSTOP,Ts,[]);\n"];
+    [buffer appendString:@"else\n"];
+    [buffer appendString:@"\tDF = DFIN;\n"];
+    [buffer appendString:@"end;\n"];
+    [buffer appendString:@"\n"];
+    [buffer appendString:@"% Get the initial state vector, setup calculation - \n"];
+    [buffer appendString:@"IC = DF.INITIAL_CONDITION_VECTOR;\n"];
+    [buffer appendString:@"SIMULATION_ARRAY = [];\n"];
+    [buffer appendString:@"\n"];
+    [buffer appendString:@"% Call the ODE solver - \n"];
+    [buffer appendString:@"pBalanceFunction = @(t,x)SystemBalanceEquations(t,x,DF);\n"];
+    [buffer appendString:@"[T,OUTPUT] = ode15s(pBalanceFunction,TIME_VECTOR,IC);\n"];
+    [buffer appendString:@"SIMULATION_ARRAY = [SIMULATION_ARRAY OUTPUT];\n"];
+    [buffer appendString:@"return;\n"];
+    
+    // return -
+    return [NSString stringWithString:buffer];
+}
+
+
 #pragma mark - private logic methods
 -(NSString *)buildSystemBalancesBufferFromBlueprintTree:(NSXMLDocument *)blueprintTree
                                             andSBMLTree:(NSXMLDocument *)sbmlTree
@@ -104,6 +167,8 @@
     [buffer appendString:@"NUMBER_OF_STATES = DF.NUMBER_OF_STATES;\n"];
     [buffer appendString:@"state_vector_dot = zeros(NUMBER_OF_STATES,1);\n"];
     [buffer appendString:@"\n"];
+    [buffer appendString:@"IDXN = find(x<0);\n"];
+    [buffer appendString:@"x(IDXN) = 0;\n"];
     [buffer appendString:@"% Calculate the kinetics vector - \n"];
     [buffer appendString:@"rate_vector = Kinetics(x,DF);\n"];
     [buffer appendString:@"\n"];
@@ -130,21 +195,28 @@
         // next, lets generate the dynamic equations -
         if ([species_type isEqualToString:@"dynamic"] == YES)
         {
+            // given this species node, build the balance string
+            NSString *product_balance_string = [self buildProductSystemBalanceStringForSpeciesNode:species_node fromModelTree:sbmlTree];
+            NSString *reactants_balance_string = [self buildReactantSystemBalanceStringForSpeciesNode:species_node fromModelTree:sbmlTree];
+            
             [buffer appendFormat:@"%%\t %lu - %@\n",species_counter,species_symbol];
-            [buffer appendFormat:@"state_vector_dot(%lu,1) = code_here;\n",species_counter];
+            [buffer appendFormat:@"state_vector_dot(%lu,1) = %@ %@;\n",species_counter,product_balance_string,reactants_balance_string];
+        }
+        
+        // next, generate effector equations -
+        if ([species_type isEqualToString:@"enzyme"] == YES)
+        {
+            // given this species node, build the balance string
+            NSString *product_balance_string = [self buildProductSystemBalanceStringForSpeciesNode:species_node fromModelTree:sbmlTree];
+            NSString *reactant_balance_string = [self buildDeactivationSystemBalanceStringForSpeciesNode:species_node fromModelTree:sbmlTree];
+            
+            [buffer appendFormat:@"%%\t %lu - %@\n",species_counter,species_symbol];
+            [buffer appendFormat:@"state_vector_dot(%lu,1) = %@ %@;\n",species_counter,product_balance_string,reactant_balance_string];
         }
         
         // update the counter -
         species_counter = species_counter + 1;
     }
-    
-    
-    
-    
-    
-    
-    
-    [buffer appendString:@"% Formulate dynamic balances - \n"];
     
     [buffer appendString:@"return;\n"];
 
@@ -315,6 +387,8 @@
         rate_counter = rate_counter + 1;
     }
     
+    [buffer appendString:@"IDXN = find(rate_vector(:,1)<0);\n"];
+    [buffer appendString:@"rate_vector(IDXN,1) = 0;\n"];
     [buffer appendString:@"return;\n"];
     
     // return buffer
@@ -543,6 +617,161 @@
     return [NSString stringWithString:buffer];
 }
 
+-(NSString *)buildProductSystemBalanceStringForSpeciesNode:(NSXMLElement *)species fromModelTree:(NSXMLDocument *)model_tree
+{
+    // Declarations -
+    BOOL FLAG = YES;
+    
+    // Buffer -
+    NSMutableString *buffer = [NSMutableString string];
+    
+    // Get the species string -
+    NSString *species_symbol = [[species attributeForName:@"symbol"] stringValue];
+    
+    // find all *products* with this symbol -
+    NSString *operation_xpath = @"//listOfOperations/operation";
+    NSMutableArray *operations_array = [[model_tree nodesForXPath:operation_xpath error:nil] mutableCopy];
+    NSUInteger product_counter = [operations_array count];
+    while (FLAG)
+    {
+        // get operation node -
+        NSXMLElement *operation_node = [operations_array lastObject];
+        
+        // remove this node from the list -
+        [operations_array removeObject:operation_node];
+        
+        // does this operation have a product that is the species string?
+        NSString *product_xpath = [NSString stringWithFormat:@"./listOfProducts/species_reference[@symbol='%@']",species_symbol];
+        NSArray *product_reference_array = [operation_node nodesForXPath:product_xpath error:nil];
+        if (product_reference_array!= nil && [product_reference_array count]>0)
+        {
+            [buffer appendFormat:@"rate_vector(%lu,1) + ",product_counter];
+            
+        }
+
+        // ok, do we add a plus?
+        if ([operations_array count]==0)
+        {
+            // we are done. Stop the iteration -
+            FLAG = NO;
+        }
+        
+        // update the counter -
+        product_counter = product_counter - 1;
+    }
+    
+    // cut off the training plus -
+    NSUInteger length = [buffer length];
+    if (length>3)
+    {
+        return [buffer substringToIndex:(length - 3)];
+    }
+    
+    // return -
+    return buffer;
+}
+
+-(NSString *)buildDeactivationSystemBalanceStringForSpeciesNode:(NSXMLElement *)species fromModelTree:(NSXMLDocument *)model_tree
+{
+    // Declarations -
+    BOOL FLAG = YES;
+    
+    // Buffer -
+    NSMutableString *buffer = [NSMutableString string];
+    
+    // Get the species string -
+    NSString *species_symbol = [[species attributeForName:@"symbol"] stringValue];
+    
+    // find all *products* with this symbol -
+    NSString *operation_xpath = @"//listOfOperations/operation";
+    NSMutableArray *operations_array = [[model_tree nodesForXPath:operation_xpath error:nil] mutableCopy];
+    NSUInteger product_counter = [operations_array count];
+    while (FLAG)
+    {
+        // get operation node -
+        NSXMLElement *operation_node = [operations_array lastObject];
+        
+        // remove this node from the list -
+        [operations_array removeObject:operation_node];
+        
+        // Is this a deactivation operation?
+        NSString *type_string = [[operation_node attributeForName:@"type"] stringValue];
+        if ([type_string isEqualToString:@"deactivation"] == YES)
+        {
+            // does this operation have a product that is the species string?
+            NSString *product_xpath = [NSString stringWithFormat:@"./listOfReactants/species_reference[@symbol='%@']",species_symbol];
+            NSArray *product_reference_array = [operation_node nodesForXPath:product_xpath error:nil];
+            if (product_reference_array!= nil && [product_reference_array count]>0)
+            {
+                [buffer appendFormat:@" - rate_vector(%lu,1)",product_counter];
+                
+            }
+        }
+        
+        // ok, do we add a plus?
+        if ([operations_array count]==0)
+        {
+            // we are done. Stop the iteration -
+            FLAG = NO;
+        }
+        
+        // update the counter -
+        product_counter = product_counter - 1;
+    }
+    
+    // return -
+    return buffer;
+
+}
+
+-(NSString *)buildReactantSystemBalanceStringForSpeciesNode:(NSXMLElement *)species fromModelTree:(NSXMLDocument *)model_tree
+{
+    // Declarations -
+    BOOL FLAG = YES;
+    
+    // Buffer -
+    NSMutableString *buffer = [NSMutableString string];
+    
+    // Get the species string -
+    NSString *species_symbol = [[species attributeForName:@"symbol"] stringValue];
+    
+    // find all *products* with this symbol -
+    NSString *operation_xpath = @"//listOfOperations/operation";
+    NSMutableArray *operations_array = [[model_tree nodesForXPath:operation_xpath error:nil] mutableCopy];
+    NSUInteger product_counter = [operations_array count];
+    while (FLAG)
+    {
+        // get operation node -
+        NSXMLElement *operation_node = [operations_array lastObject];
+        
+        // remove this node from the list -
+        [operations_array removeObject:operation_node];
+        
+        // does this operation have a product that is the species string?
+        NSString *product_xpath = [NSString stringWithFormat:@"./listOfReactants/species_reference[@symbol='%@']",species_symbol];
+        NSArray *product_reference_array = [operation_node nodesForXPath:product_xpath error:nil];
+        if (product_reference_array!= nil && [product_reference_array count]>0)
+        {
+            [buffer appendFormat:@" - rate_vector(%lu,1)",product_counter];
+            
+        }
+        
+        // ok, do we add a plus?
+        if ([operations_array count]==0)
+        {
+            // we are done. Stop the iteration -
+            FLAG = NO;
+        }
+        
+        // update the counter -
+        product_counter = product_counter - 1;
+    }
+    
+    // return -
+    return buffer;
+}
+
+
 -(NSString *)buildReactionStringRepresentationForOperationWithName:(NSString *)operatioName
                                                       fromSBMLTree:(NSXMLDocument *)sbmlTree
 {
@@ -607,6 +836,7 @@
     // return buffer
     return [NSString stringWithString:buffer];
 }
+
 
 
 @end

@@ -29,6 +29,7 @@
 		AD89479F17B0221300B92FCE /* VLCFLMLToDataFileVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD89479E17B0221300B92FCE /* VLCFLMLToDataFileVendor.m */; };
 		AD8947A217B0286100B92FCE /* VLCFLMLToKineticsVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947A117B0286100B92FCE /* VLCFLMLToKineticsVendor.m */; };
 		AD8947A517B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947A417B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.m */; };
+		AD8947A917B14DF100B92FCE /* VLCFLMLToSignalDriverVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947A817B14DF100B92FCE /* VLCFLMLToSignalDriverVendor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,8 @@
 		AD8947A117B0286100B92FCE /* VLCFLMLToKineticsVendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCFLMLToKineticsVendor.m; sourceTree = "<group>"; };
 		AD8947A317B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VLCFLMLToSystemBalanceEquationsVendor.h; sourceTree = "<group>"; };
 		AD8947A417B02F1500B92FCE /* VLCFLMLToSystemBalanceEquationsVendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCFLMLToSystemBalanceEquationsVendor.m; sourceTree = "<group>"; };
+		AD8947A717B14DF100B92FCE /* VLCFLMLToSignalDriverVendor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VLCFLMLToSignalDriverVendor.h; sourceTree = "<group>"; };
+		AD8947A817B14DF100B92FCE /* VLCFLMLToSignalDriverVendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCFLMLToSignalDriverVendor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,6 +230,8 @@
 		AD89479217B014A900B92FCE /* services */ = {
 			isa = PBXGroup;
 			children = (
+				AD8947A717B14DF100B92FCE /* VLCFLMLToSignalDriverVendor.h */,
+				AD8947A817B14DF100B92FCE /* VLCFLMLToSignalDriverVendor.m */,
 				AD89479317B014BB00B92FCE /* VLTransformationServiceVendor.h */,
 				AD89479417B014BB00B92FCE /* VLTransformationServiceVendor.m */,
 				AD89479D17B0221300B92FCE /* VLCFLMLToDataFileVendor.h */,
@@ -355,6 +360,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD8947A917B14DF100B92FCE /* VLCFLMLToSignalDriverVendor.m in Sources */,
 				AD89478317B006DD00B92FCE /* VLCodeGenerationOperation.m in Sources */,
 				AD89478A17B006FD00B92FCE /* VLCoreUtilitiesLib.m in Sources */,
 				AD89475917B000D500B92FCE /* VLDocument.m in Sources */,
