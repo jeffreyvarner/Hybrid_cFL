@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface VLDocument : NSDocument
+@interface VLDocument : NSDocument<NSComboBoxDelegate,NSComboBoxDataSource>
 {
     @private
     NSButton *_myGenerateCodeButton;
@@ -23,6 +23,9 @@
     NSWindowController *_myWindowController;
     NSURL *_myBlueprintFileURL;
     CFTimeInterval _myExecutionStartTime;
+    
+    // defaults -
+    NSArray *_myDefaultOutputTypes;
 }
 
 // actions -

@@ -23,6 +23,11 @@
 
 @property (strong) NSWindowController *myWindowController;
 @property (strong) NSURL *myBlueprintFileURL;
+@property (strong) NSArray *myDefaultOutputTypes;
+
+// private methdos
+-(void)setup;
+
 
 @end
 
@@ -54,6 +59,9 @@
     
     // Start the foundation server -
     [VLCodeGenerationFoundationServer sharedFoundationServer];
+    
+    // initialize me -
+    [self setup];
     
     // Setup completion notification -
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
@@ -234,6 +242,38 @@
 }
 
 
+#pragma mark - combobox datasource/delegate methods
+- (void)comboBoxSelectionDidChange:(NSNotification *)notification
+{
+    // ok, the combox box selection changed. What item is selected?
+    NSUInteger selected_language_index = [[self myModelOutputTypeComboBox] indexOfSelectedItem];
+    
+}
+
+- (NSInteger)numberOfItemsInComboBox:(NSComboBox *)aComboBox
+{
+    if ([self myDefaultOutputTypes]!=nil)
+    {
+        return [[self myDefaultOutputTypes] count];
+    }
+    
+    return 0;
+}
+
+- (id)comboBox:(NSComboBox *)aComboBox objectValueForItemAtIndex:(NSInteger)index
+{
+    if ([self myDefaultOutputTypes] != nil &&
+        [[self myDefaultOutputTypes] count]>index)
+    {
+        // get the node, return the label attribute
+        NSXMLElement *node = [[self myDefaultOutputTypes] objectAtIndex:index];
+        NSString *display_label = [[node attributeForName:@"label"] stringValue];
+        return display_label;
+    }
+    
+    return nil;
+}
+
 #pragma mark - alert delegate
 - (void)alertDidEnd:(NSAlert *)alert returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo {
     if (returnCode == NSAlertFirstButtonReturn) {
@@ -248,6 +288,32 @@
         [[self myModelSpecificationPathTextField] setStringValue:@""];
     }
 }
+
+
+#pragma mark - setup methods
+-(void)setup
+{
+
+    // ok, have we loaded the default output types?
+    if ([self myDefaultOutputTypes] == nil)
+    {
+        // load the defaults -
+        NSString *path_to_outputs = [[NSBundle mainBundle] pathForResource:@"Outputs" ofType:@"xml"];
+        if (path_to_outputs!=nil)
+        {
+            // load XML file and get output nodes -
+            NSXMLDocument *output_document = [VLCoreUtilitiesLib createXMLDocumentFromFile:[NSURL fileURLWithPath:path_to_outputs]];
+            
+            // get the nodes -
+            NSArray *nodes_array = [output_document nodesForXPath:@"//output" error:nil];
+            if (nodes_array!=nil)
+            {
+                self.myDefaultOutputTypes = [NSArray arrayWithArray:nodes_array];
+            }
+        }
+    }
+}
+
 
 
 + (BOOL)autosavesInPlace

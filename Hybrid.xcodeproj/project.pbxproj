@@ -34,6 +34,7 @@
 		AD8947B017B1915000B92FCE /* VLGraphVizLanguageAdaptor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947AF17B1915000B92FCE /* VLGraphVizLanguageAdaptor.m */; };
 		AD8947B317B1969C00B92FCE /* VLCFLMLToExternalForcingFunctionVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD8947B217B1969C00B92FCE /* VLCFLMLToExternalForcingFunctionVendor.m */; };
 		F20EB3D217C6B9C3004C035E /* VLCGSLLanguageAdaptor.m in Sources */ = {isa = PBXBuildFile; fileRef = F20EB3D117C6B9C3004C035E /* VLCGSLLanguageAdaptor.m */; };
+		F226004E17C6C47800D1AC27 /* Outputs.xml in Resources */ = {isa = PBXBuildFile; fileRef = F226004D17C6C47800D1AC27 /* Outputs.xml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +98,7 @@
 		AD8947B217B1969C00B92FCE /* VLCFLMLToExternalForcingFunctionVendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCFLMLToExternalForcingFunctionVendor.m; sourceTree = "<group>"; };
 		F20EB3D017C6B9C3004C035E /* VLCGSLLanguageAdaptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VLCGSLLanguageAdaptor.h; sourceTree = "<group>"; };
 		F20EB3D117C6B9C3004C035E /* VLCGSLLanguageAdaptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCGSLLanguageAdaptor.m; sourceTree = "<group>"; };
+		F226004D17C6C47800D1AC27 /* Outputs.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Outputs.xml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +164,7 @@
 		AD89474B17B000D500B92FCE /* Hybrid */ = {
 			isa = PBXGroup;
 			children = (
+				F226004A17C6C42100D1AC27 /* default_config */,
 				AD8947A617B0303C00B92FCE /* graph */,
 				AD89479217B014A900B92FCE /* services */,
 				AD89478417B006EA00B92FCE /* utilities */,
@@ -296,6 +299,14 @@
 			name = c_gsl;
 			sourceTree = "<group>";
 		};
+		F226004A17C6C42100D1AC27 /* default_config */ = {
+			isa = PBXGroup;
+			children = (
+				F226004D17C6C47800D1AC27 /* Outputs.xml */,
+			);
+			name = default_config;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -375,6 +386,7 @@
 			files = (
 				AD89475017B000D500B92FCE /* InfoPlist.strings in Resources */,
 				AD89476117B000D600B92FCE /* Images.xcassets in Resources */,
+				F226004E17C6C47800D1AC27 /* Outputs.xml in Resources */,
 				AD89475617B000D500B92FCE /* Credits.rtf in Resources */,
 				AD89475C17B000D500B92FCE /* VLDocument.xib in Resources */,
 				AD89475F17B000D600B92FCE /* MainMenu.xib in Resources */,
