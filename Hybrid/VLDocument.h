@@ -26,6 +26,7 @@
     
     // defaults -
     NSArray *_myDefaultOutputTypes;
+    NSString *_mySelectedLanguageAdaptor;
 }
 
 // actions -

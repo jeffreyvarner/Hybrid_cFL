@@ -24,6 +24,7 @@
 @property (strong) NSWindowController *myWindowController;
 @property (strong) NSURL *myBlueprintFileURL;
 @property (strong) NSArray *myDefaultOutputTypes;
+@property (strong) NSString *mySelectedLanguageAdaptor;
 
 // private methdos
 -(void)setup;
@@ -155,14 +156,30 @@
                 
                 // Get the input and output classname -
                 NSString *inputClassNameXPath = [NSString stringWithFormat:@"//Transformation[@name='%@']/@classname",transformationName];
-                NSString *languageXPath = [NSString stringWithFormat:@"//Transformation[@name='%@']/@language",transformationName];
+                
+
+                
+                
+                
                 
                 // execute the query -
                 NSString *inputClassName = [[[VLCoreUtilitiesLib executeXPathQuery:inputClassNameXPath
                                                                        withXMLTree:blueprintTree] lastObject] stringValue];
                 
-                NSString *languageClassName = [[[VLCoreUtilitiesLib executeXPathQuery:languageXPath
-                                                                          withXMLTree:blueprintTree] lastObject] stringValue];
+                // do we have a selected language adaptor?
+                NSString *languageClassName = nil;
+                if ([self mySelectedLanguageAdaptor]!=nil)
+                {
+                    languageClassName = [self mySelectedLanguageAdaptor];
+                }
+                else
+                {
+                    NSString *languageXPath = [NSString stringWithFormat:@"//Transformation[@name='%@']/@language",transformationName];
+                    languageClassName = [[[VLCoreUtilitiesLib executeXPathQuery:languageXPath
+                                                                              withXMLTree:blueprintTree] lastObject] stringValue];
+                }
+                
+                
                 
                 // Build the input and output handlers -
                 VLTransformationServiceVendor *vendor = [[NSClassFromString(inputClassName) alloc] init];
@@ -248,6 +265,14 @@
     // ok, the combox box selection changed. What item is selected?
     NSUInteger selected_language_index = [[self myModelOutputTypeComboBox] indexOfSelectedItem];
     
+    // grab the node for this selection -
+    NSXMLElement *node = [[self myDefaultOutputTypes] objectAtIndex:selected_language_index];
+    
+    // get the language_adaptor attribute -
+    NSString *language_adaptor_string = [[node attributeForName:@"language_adaptor"] stringValue];
+    
+    // grab this string -
+    self.mySelectedLanguageAdaptor = language_adaptor_string;
 }
 
 - (NSInteger)numberOfItemsInComboBox:(NSComboBox *)aComboBox
