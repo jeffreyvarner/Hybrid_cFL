@@ -83,8 +83,29 @@
 +(void)writeBuffer:(NSString *)buffer
              toURL:(NSURL *)fileURL
 {
+    // if no buffer -or- no url then exit
+    if (buffer == nil || fileURL == nil)
+    {
+        return;
+    }
+    
+    
     // write -
     NSError *error = nil;
+    
+    // ok, so we need to check to see if the directory exists -
+    // Get the directory from the URL -
+    NSURL *output_directory = [fileURL URLByDeletingLastPathComponent];
+    NSFileManager *filesystem_manager = [NSFileManager defaultManager];
+    BOOL isDirectory;
+    if ([filesystem_manager fileExistsAtPath:[output_directory path] isDirectory:&isDirectory] == NO)
+    {
+        // build new directory -
+        [filesystem_manager createDirectoryAtURL:output_directory withIntermediateDirectories:YES
+                                      attributes:nil error:nil];
+    }
+    
+    
     [buffer writeToFile:[fileURL path]
              atomically:YES
                encoding:NSUTF8StringEncoding
