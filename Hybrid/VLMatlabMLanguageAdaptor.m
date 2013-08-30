@@ -159,10 +159,14 @@
     NSString *header_block = [self buildHeaderBlockFromBlueprintTree:transformation_tree andSBMLTree:model_tree];
     NSString *parameter_block = [self buildRateConstantListFromSBMLTree:model_tree];
     NSString *ic_block = [self buildInitialConditionListFromSBMLTree:model_tree];
+    NSString *growth_rate_block = [self buildGrowthRateArrayFromModelTree:model_tree];
+    
+    
     NSString *footer_block = [self buildFooterBlockFromBlueprintTree:transformation_tree andSBMLTree:model_tree];
     [buffer appendString:header_block];
     [buffer appendString:parameter_block];
     [buffer appendString:ic_block];
+    [buffer appendString:growth_rate_block];
     [buffer appendString:footer_block];
     
     // return -
@@ -592,6 +596,7 @@
     [buffer appendString:@"DF.INITIAL_CONDITION_VECTOR = INITIAL_CONDITION_VECTOR;\n"];
     [buffer appendString:@"DF.NUMBER_OF_RATES = NUMBER_OF_RATES;\n"];
     [buffer appendString:@"DF.NUMBER_OF_STATES = NUMBER_OF_STATES;\n"];
+    [buffer appendString:@"DF.GROWTH_SELECTION_ARRAY = GROWTH_SELECTION_ARRAY;\n"];
     [buffer appendString:@"DF.MEASUREMENT_SELECTION_VECTOR = 1:NUMBER_OF_STATES;\n"];
     // close -
     [buffer appendString:@"% ======================================================== %\n"];
@@ -600,6 +605,58 @@
     // return buffer
     return [NSString stringWithString:buffer];
 }
+
+-(NSString *)buildSourceAndDegradationArrayFromModelTree:(NSXMLDocument *)sbmlTree
+{
+    // Initialize the buffer -
+    NSMutableString *buffer = [NSMutableString string];
+    
+    // get my species -
+    NSArray *states_array = [sbmlTree nodesForXPath:@".//listOfSpecies/species" error:nil];
+    for (NSXMLElement *node in states_array)
+    {
+        // ok, what compartment is this in? i
+    }
+    
+    
+    // return buffer
+    return [NSString stringWithString:buffer];
+}
+
+-(NSString *)buildGrowthRateArrayFromModelTree:(NSXMLDocument *)sbmlTree
+{
+    // Initialize the buffer -
+    NSMutableString *buffer = [NSMutableString string];
+    
+    // growth selection array -
+    [buffer appendString:@"\n"];
+    [buffer appendString:@"% Growth selection array - \n"];
+    [buffer appendString:@"GROWTH_SELECTION_ARRAY = [\n"];
+    
+    // get my species -
+    NSArray *states_array = [sbmlTree nodesForXPath:@".//listOfSpecies/species" error:nil];
+    for (NSXMLElement *node in states_array)
+    {
+        // ok, what compartment is this in? if in intracellular we get a 1, otherwise a 0
+        NSString *compartment_string = [[node attributeForName:@"compartment"] stringValue];
+        NSString *species_symbol = [[node attributeForName:@"symbol"] stringValue];
+        if ([compartment_string isEqualToString:@"intracellular"] == YES)
+        {
+            [buffer appendFormat:@"\t 1.0 \t ; \t %% %@ %@ \n",species_symbol,compartment_string];
+        }
+        else
+        {
+            [buffer appendFormat:@"\t 0.0 \t ; \t %% %@ %@ \n",species_symbol,compartment_string];
+        }
+    }
+    
+    // close -
+    [buffer appendString:@"];\n"];
+    
+    // return buffer
+    return [NSString stringWithString:buffer];
+}
+
 
 -(NSString *)buildInitialConditionListFromSBMLTree:(NSXMLDocument *)sbmlTree
 {
