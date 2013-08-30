@@ -10,6 +10,59 @@
 
 @implementation VLMatlabMLanguageAdaptor
 
+-(NSString *)generateGrowthRateFunctionBufferWithOptions:(NSDictionary *)options
+{
+    // get the options from the dictionary -
+    __unused NSXMLDocument *model_tree = [options objectForKey:kXMLModelTree];
+    __unused NSXMLDocument *transformation_tree = [options objectForKey:kXMLTransformationTree];
+    
+    // build the buffer -
+    NSMutableString *buffer = [NSMutableString string];
+    
+    
+    // header -
+    [buffer appendString:@"function [growth_rate] = GrowthRate(t,x,DF)\n"];
+    [buffer appendString:@"% ------------------------------------------------------------------------------------- %\n"];
+    [buffer appendString:@"% Copyright (c) 2013 Varnerlab,\n"];
+    [buffer appendString:@"% School of Chemical and Biomolecular Engineering,\n"];
+    [buffer appendString:@"% Cornell University, Ithaca NY 14853 USA.\n"];
+    [buffer appendString:@"%\n"];
+    [buffer appendString:@"% Permission is hereby granted, free of charge, to any person obtaining a copy\n"];
+    [buffer appendString:@"% of this software and associated documentation files (the \"Software\"), to deal\n"];
+    [buffer appendString:@"% in the Software without restriction, including without limitation the rights\n"];
+    [buffer appendString:@"% to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n"];
+    [buffer appendString:@"% copies of the Software, and to permit persons to whom the Software is\n"];
+    [buffer appendString:@"% furnished to do so, subject to the following conditions:\n"];
+    [buffer appendString:@"% The above copyright notice and this permission notice shall be included in\n"];
+    [buffer appendString:@"% all copies or substantial portions of the Software.\n"];
+    [buffer appendString:@"%\n"];
+    [buffer appendString:@"% THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\n"];
+    [buffer appendString:@"% IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\n"];
+    [buffer appendString:@"% FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\n"];
+    [buffer appendString:@"% AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\n"];
+    [buffer appendString:@"% LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n"];
+    [buffer appendString:@"% OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\n"];
+    [buffer appendString:@"% THE SOFTWARE.\n"];
+    [buffer appendString:@"%\n"];
+    [buffer appendString:@"% CalculateExternalForcing.m \n"];
+    [buffer appendString:@"% CalculateExternalForcing external forces added to the ssystem.\n"];
+    [buffer appendString:@"% Time, state and DF are passed in, external force vector is returned. \n"];
+    [buffer appendString:@"% ------------------------------------------------------------------------------------- %\n"];
+    [buffer appendString:@"\n"];
+    [buffer appendString:@"% Define the default growth rate - \n"];
+    [buffer appendString:@"growth_rate = 0.0;\n"];
+    [buffer appendString:@"\n"];
+    [buffer appendString:@"% Your problem specific growth rate goes here. \n"];
+    [buffer appendString:@"% ... \n"];
+    [buffer appendString:@"\n"];
+    [buffer appendString:@"return;\n"];
+    
+    // return -
+    return [NSString stringWithString:buffer];
+
+}
+
+
 -(NSString *)generateSimulationInputBufferWithOptions:(NSDictionary *)options
 {
     // get the options from the dictionary -
@@ -230,6 +283,13 @@
     [buffer appendString:@"% Calculate the input vector - \n"];
     [buffer appendString:@"EXT_FORCING = CalculateExternalForcing(t,x,DF);\n"];
     [buffer appendString:@"\n"];
+    [buffer appendString:@"% Get the source array from DF - \n"];
+    [buffer appendString:@"SOURCE_ARRAY = DF.SOURCE_AND_DEGRADATION_ARRAY;\n"];
+    [buffer appendString:@"GROWTH_SELECTION_ARRAY = DF.GROWTH_SELECTION_ARRAY;\n"];
+    [buffer appendString:@"\n"];
+    [buffer appendString:@"% Calculate the growth rate - \n"];
+    [buffer appendString:@"growth_rate = GrowthRate(t,x,DF);\n"];
+    [buffer appendString:@"\n"];
     [buffer appendString:@"% Formulate balance equations - \n"];
     [buffer appendString:@"\n"];
     
@@ -242,11 +302,20 @@
         NSString *species_symbol = [[species_node attributeForName:@"symbol"] stringValue];
         NSString *species_type = [[species_node attributeForName:@"type"] stringValue];
         
+        [buffer appendFormat:@"%%\t %lu - %@\n",species_counter,species_symbol];
+        [buffer appendFormat:@"state_vector_dot(%lu,1) = ",species_counter];
+        
+        // generation and degrdation terms -
+        [buffer appendFormat:@"SOURCE_ARR(%lu,1) - SOURCE_ARR(%lu,2)*x(%lu,1) ",species_counter,species_counter,species_counter];
+        
+        // growth term -
+        [buffer appendFormat:@" - GROWTH_SELECTION_ARRAY(%lu,1)*growth_rate*x(%lu,1)",species_counter,species_counter];
+        
         // ok, if we have a constant node, the generate a state_vector_dot = 0;
         if ([species_type isEqualToString:@"constant"] == YES)
         {
-            [buffer appendFormat:@"%%\t %lu - %@\n",species_counter,species_symbol];
-            [buffer appendFormat:@"state_vector_dot(%lu,1) = EXT_FORCING(%lu,1);\n",species_counter,species_counter];
+            
+            [buffer appendFormat:@" + EXT_FORCING(%lu,1);\n",species_counter];
         }
         
         // next, lets generate the dynamic equations -
@@ -256,8 +325,7 @@
             NSString *product_balance_string = [self buildProductSystemBalanceStringForSpeciesNode:species_node fromModelTree:sbmlTree];
             NSString *reactants_balance_string = [self buildReactantSystemBalanceStringForSpeciesNode:species_node fromModelTree:sbmlTree];
             
-            [buffer appendFormat:@"%%\t %lu - %@\n",species_counter,species_symbol];
-            [buffer appendFormat:@"state_vector_dot(%lu,1) = %@ %@ + EXT_FORCING(%lu,1);\n",species_counter,product_balance_string,reactants_balance_string,species_counter];
+            [buffer appendFormat:@"%@ %@ + EXT_FORCING(%lu,1);\n",product_balance_string,reactants_balance_string,species_counter];
         }
         
         // next, generate effector equations -
@@ -267,8 +335,7 @@
             NSString *product_balance_string = [self buildProductSystemBalanceStringForSpeciesNode:species_node fromModelTree:sbmlTree];
             NSString *reactant_balance_string = [self buildDeactivationSystemBalanceStringForSpeciesNode:species_node fromModelTree:sbmlTree];
             
-            [buffer appendFormat:@"%%\t %lu - %@\n",species_counter,species_symbol];
-            [buffer appendFormat:@"state_vector_dot(%lu,1) = %@ %@ + EXT_FORCING(%lu,1);\n",species_counter,product_balance_string,reactant_balance_string,species_counter];
+            [buffer appendFormat:@"%@ %@ + EXT_FORCING(%lu,1);\n",product_balance_string,reactant_balance_string,species_counter];
         }
         
         // update the counter -
@@ -702,7 +769,7 @@
         NSArray *product_reference_array = [operation_node nodesForXPath:product_xpath error:nil];
         if (product_reference_array!= nil && [product_reference_array count]>0)
         {
-            [buffer appendFormat:@"rate_vector(%lu,1) + ",product_counter];
+            [buffer appendFormat:@" + rate_vector(%lu,1) ",product_counter];
             
         }
 
@@ -718,11 +785,11 @@
     }
     
     // cut off the training plus -
-    NSUInteger length = [buffer length];
-    if (length>3)
-    {
-        return [buffer substringToIndex:(length - 3)];
-    }
+//    NSUInteger length = [buffer length];
+//    if (length>3)
+//    {
+//        return [buffer substringToIndex:(length - 3)];
+//    }
     
     // return -
     return buffer;

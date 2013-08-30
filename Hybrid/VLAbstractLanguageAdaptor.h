@@ -23,6 +23,7 @@
 -(NSString *)generateEvaluateSignalEquationsBufferWithOptions:(NSDictionary *)options;
 -(NSString *)generateSimulationInputBufferWithOptions:(NSDictionary *)options;
 -(NSString *)generateSystemBalancesWithOptions:(NSDictionary *)options;
+-(NSString *)generateGrowthRateFunctionBufferWithOptions:(NSDictionary *)options;
 
 // graphviz methods
 -(NSString *)generateGraphvizNetworkVisualizationBufferWithOptions:(NSDictionary *)options;

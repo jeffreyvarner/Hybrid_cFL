@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD81DE9817D0BBF400852C23 /* VLCFLMLToGrowthRateFunctionVendor.m in Sources */ = {isa = PBXBuildFile; fileRef = AD81DE9717D0BBF400852C23 /* VLCFLMLToGrowthRateFunctionVendor.m */; };
 		AD89474617B000D500B92FCE /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD89474517B000D500B92FCE /* Cocoa.framework */; };
 		AD89475017B000D500B92FCE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = AD89474E17B000D500B92FCE /* InfoPlist.strings */; };
 		AD89475217B000D500B92FCE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AD89475117B000D500B92FCE /* main.m */; };
@@ -48,6 +49,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AD81DE9617D0BBF400852C23 /* VLCFLMLToGrowthRateFunctionVendor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VLCFLMLToGrowthRateFunctionVendor.h; sourceTree = "<group>"; };
+		AD81DE9717D0BBF400852C23 /* VLCFLMLToGrowthRateFunctionVendor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VLCFLMLToGrowthRateFunctionVendor.m; sourceTree = "<group>"; };
 		AD89474217B000D500B92FCE /* Hybrid.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hybrid.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD89474517B000D500B92FCE /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		AD89474817B000D500B92FCE /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -261,6 +264,8 @@
 				AD8947B217B1969C00B92FCE /* VLCFLMLToExternalForcingFunctionVendor.m */,
 				AD8947AA17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.h */,
 				AD8947AB17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.m */,
+				AD81DE9617D0BBF400852C23 /* VLCFLMLToGrowthRateFunctionVendor.h */,
+				AD81DE9717D0BBF400852C23 /* VLCFLMLToGrowthRateFunctionVendor.m */,
 			);
 			name = services;
 			sourceTree = "<group>";
@@ -418,6 +423,7 @@
 				AD89478917B006FD00B92FCE /* VLBlocksAndConstanStrings.m in Sources */,
 				AD8947AC17B1911C00B92FCE /* VLCFLMLToGraphVizDotVendor.m in Sources */,
 				AD8947A217B0286100B92FCE /* VLCFLMLToKineticsVendor.m in Sources */,
+				AD81DE9817D0BBF400852C23 /* VLCFLMLToGrowthRateFunctionVendor.m in Sources */,
 				F20EB3D217C6B9C3004C035E /* VLCGSLLanguageAdaptor.m in Sources */,
 				AD89479C17B01DD500B92FCE /* VLMatlabMLanguageAdaptor.m in Sources */,
 				AD89479517B014BB00B92FCE /* VLTransformationServiceVendor.m in Sources */,
