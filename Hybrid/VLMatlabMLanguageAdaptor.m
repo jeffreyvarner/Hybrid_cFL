@@ -311,7 +311,7 @@
         [buffer appendFormat:@"state_vector_dot(%lu,1) = ",species_counter];
         
         // generation and degrdation terms -
-        [buffer appendFormat:@"SOURCE_ARR(%lu,1) - SOURCE_ARR(%lu,2)*x(%lu,1) ",species_counter,species_counter,species_counter];
+        [buffer appendFormat:@"SOURCE_ARRAY(%lu,1) - SOURCE_ARRAY(%lu,2)*x(%lu,1) ",species_counter,species_counter,species_counter];
         
         // growth term -
         [buffer appendFormat:@" - GROWTH_SELECTION_ARRAY(%lu,1)*growth_rate*x(%lu,1)",species_counter,species_counter];
