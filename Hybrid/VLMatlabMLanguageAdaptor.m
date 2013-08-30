@@ -160,13 +160,14 @@
     NSString *parameter_block = [self buildRateConstantListFromSBMLTree:model_tree];
     NSString *ic_block = [self buildInitialConditionListFromSBMLTree:model_tree];
     NSString *growth_rate_block = [self buildGrowthRateArrayFromModelTree:model_tree];
-    
+    NSString *source_array_block = [self buildSourceAndDegradationArrayFromModelTree:model_tree];
     
     NSString *footer_block = [self buildFooterBlockFromBlueprintTree:transformation_tree andSBMLTree:model_tree];
     [buffer appendString:header_block];
     [buffer appendString:parameter_block];
     [buffer appendString:ic_block];
     [buffer appendString:growth_rate_block];
+    [buffer appendString:source_array_block];
     [buffer appendString:footer_block];
     
     // return -
@@ -597,6 +598,7 @@
     [buffer appendString:@"DF.NUMBER_OF_RATES = NUMBER_OF_RATES;\n"];
     [buffer appendString:@"DF.NUMBER_OF_STATES = NUMBER_OF_STATES;\n"];
     [buffer appendString:@"DF.GROWTH_SELECTION_ARRAY = GROWTH_SELECTION_ARRAY;\n"];
+    [buffer appendString:@"DF.SOURCE_AND_DEGRADATION_ARRAY = SOURCE_ARRAY;\n"];
     [buffer appendString:@"DF.MEASUREMENT_SELECTION_VECTOR = 1:NUMBER_OF_STATES;\n"];
     // close -
     [buffer appendString:@"% ======================================================== %\n"];
@@ -611,13 +613,41 @@
     // Initialize the buffer -
     NSMutableString *buffer = [NSMutableString string];
     
+    [buffer appendString:@"\n"];
+    [buffer appendString:@"% Source and degradation selection array - \n"];
+    [buffer appendString:@"SOURCE_ARRAY = [\n"];
+    
+    
     // get my species -
     NSArray *states_array = [sbmlTree nodesForXPath:@".//listOfSpecies/species" error:nil];
     for (NSXMLElement *node in states_array)
     {
-        // ok, what compartment is this in? i
+        // ok, what has the user put down for source and degradation?
+        NSString *generation_string = [[node attributeForName:@"generation"] stringValue];
+        NSString *degradation_string = [[node attributeForName:@"degradation"] stringValue];
+        NSString *species_symbol = [[node attributeForName:@"symbol"] stringValue];
+        
+        if ([generation_string isEqualToString:@"no"] == YES)
+        {
+            [buffer appendString:@"\t 0.0\t"];
+        }
+        else
+        {
+            [buffer appendString:@"\t 1.0\t"];
+        }
+        
+        if ([degradation_string isEqualToString:@"no"] == YES)
+        {
+            [buffer appendFormat:@"0.0 \t ; \t %% %@\n",species_symbol];
+        }
+        else
+        {
+            [buffer appendFormat:@"0.1 \t ; \t %% %@\n",species_symbol];
+        }
     }
     
+    // close -
+    [buffer appendString:@"];\n"];
     
     // return buffer
     return [NSString stringWithString:buffer];
