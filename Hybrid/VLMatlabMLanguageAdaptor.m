@@ -497,6 +497,10 @@
             }
             
             [buffer appendFormat:@"INPUT_%@ = %@",operation_name,local_buffer];
+            [buffer appendFormat:@"if (INPUT_%@ < 0)\n",operation_name];
+            [buffer appendFormat:@"\t INPUT_%@ = 0;\n",operation_name];
+            [buffer appendString:@"end;\n"];
+            
         }
         else if ([operation_type isEqualToString:@"SINGLE_PRODUCT_INHIBITION"]==YES)
         {
